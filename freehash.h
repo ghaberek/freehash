@@ -36,8 +36,8 @@ For more information, please refer to <http://unlicense.org/>
 #include <ctype.h>
 #include <limits.h>
 
-#ifndef FREEHASH_CUSTOM_H_
 #define LFH_NOTHING
+#define LFH_HASH_HELPERS
 #define LFH_MD2
 #define LFH_MD4
 #define LFH_MD5
@@ -49,6 +49,7 @@ For more information, please refer to <http://unlicense.org/>
 #define LFH_SHA512_224
 #define LFH_SHA512_256
 #define LFH_SHA3
+#ifndef FREEHASH_CUSTOM_H_
 #define FREEHASH_CUSTOM_H_
 
 #ifndef XMALLOC

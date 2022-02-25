@@ -3,3 +3,6 @@ src/*
 *.dll
 *.so
 *.o
+ex.err
+test-shared
+test-static
