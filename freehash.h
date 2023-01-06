@@ -159,7 +159,7 @@ For more information, please refer to <http://unlicense.org/>
 
 	#define LFH_NO_MISC
 	#define LFH_BASE64
-#endif
+#endif /* LFH_EASY */
 
 #ifdef LFH_MINIMAL
 	#define LFH_RIJNDAEL
@@ -173,7 +173,7 @@ For more information, please refer to <http://unlicense.org/>
 	#define LFH_TRY_URANDOM_FIRST
 
 	#undef LFH_NO_FILE
-#endif
+#endif /* LFH_MINIMAL */
 
 #ifndef LFH_NO_TEST
 	#define LFH_TEST
@@ -187,7 +187,7 @@ For more information, please refer to <http://unlicense.org/>
 	#define LFH_YARROW_AES 2
 #endif
 
-#endif
+#endif /* LFH_YARROW */
 
 #ifdef LFH_FORTUNA
 
@@ -309,7 +309,7 @@ For more information, please refer to <http://unlicense.org/>
 	#define LFH_ECC_SECP384R1
 	#define LFH_ECC_SECP521R1
 #endif
-#endif
+#endif /* LFH_MECC */
 
 #if defined(LFH_DER)
 	#ifndef LFH_DER_MAX_RECURSION
@@ -440,9 +440,7 @@ For more information, please refer to <http://unlicense.org/>
 #define LFH_MUTEX_UNLOCK(x)
 #define LFH_MUTEX_DESTROY(x)
 
-#endif
-
-#endif
+#endif /* LFH_PTHREAD */
 
 #ifndef LFH_NO_FILE
 	#ifndef LFH_FILE_READ_BUFSIZE
@@ -482,6 +480,8 @@ For more information, please refer to <http://unlicense.org/>
 #define LFH_ECC_SECP521R1
 #undef LFH_ECC521
 #endif
+
+#endif /* FREEHASH_CUSTOM_H_ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -541,7 +541,7 @@ enum {
 
 /* This is the build config file.
  *
- * With this you can setup what to inlcude/exclude automatically during any build.  Just comment
+ * With this you can setup what to include/exclude automatically during any build.  Just comment
  * out the line that #define's the word for the thing you want to remove.  phew!
  */
 
@@ -809,6 +809,15 @@ typedef unsigned long lfh_mp_digit;
 	#define LFH_ALIGN(n) __attribute__((aligned(n)))
 #else
 	#define LFH_ALIGN(n)
+#endif
+
+/* Define `LFH_NO_NULL_TERMINATION_CHECK` in the user code
+ * before including `tomcrypt.h` to disable this functionality.
+ */
+#if defined(__GNUC__) && __GNUC__ >= 4 && !defined(LFH_NO_NULL_TERMINATION_CHECK)
+#   define LFH_NULL_TERMINATED __attribute__((sentinel))
+#else
+#   define LFH_NULL_TERMINATED
 #endif
 
 #if defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 405)
@@ -1315,7 +1324,8 @@ int hash_memory(int hash,
 				const unsigned char *in,  unsigned long inlen,
 						unsigned char *out, unsigned long *outlen);
 int hash_memory_multi(int hash, unsigned char *out, unsigned long *outlen,
-						const unsigned char *in, unsigned long inlen, ...);
+						const unsigned char *in, unsigned long inlen, ...)
+						LFH_NULL_TERMINATED;
 
 #ifndef LFH_NO_FILE
 int hash_filehandle(int hash, FILE *in, unsigned char *out, unsigned long *outlen);
@@ -1408,7 +1418,7 @@ const char *error_to_string(int err);
 
 extern const char *crypt_build_settings;
 
-int crypt_fsa(void *mp, ...);
+int crypt_fsa(void *mp, ...) LFH_NULL_TERMINATED;
 
 int crypt_get_constant(const char* namein, int *valueout);
 int crypt_list_all_constants(char *names_list, unsigned int *names_list_size);
@@ -1459,6 +1469,7 @@ enum padding_type {
 	LFH_PAD_ISO_10126    = 0x1000U,
 #endif
 	LFH_PAD_ANSI_X923    = 0x2000U,
+	LFH_PAD_SSH          = 0x3000U,
 	/* The following padding modes don't contain the padding
 	* length as last byte of the padding.
 	*/
@@ -1483,8 +1494,8 @@ typedef enum ssh_data_type_ {
 	LFH_SSHDATA_NAMELIST,
 } ssh_data_type;
 
-int ssh_encode_sequence_multi(unsigned char *out, unsigned long *outlen, ...);
-int ssh_decode_sequence_multi(const unsigned char *in, unsigned long *inlen, ...);
+int ssh_encode_sequence_multi(unsigned char *out, unsigned long *outlen, ...) LFH_NULL_TERMINATED;
+int ssh_decode_sequence_multi(const unsigned char *in, unsigned long *inlen, ...) LFH_NULL_TERMINATED;
 #endif /* LFH_SSH */
 
 int compare_testvector(const void* is, const unsigned long is_len, const void* should, const unsigned long should_len, const char* what, int which);
