@@ -90,7 +90,7 @@ public enum
 
 constant SIZEOF_HASH_STATE = 416
 
-function _init( integer func )
+export function hash_init( integer func )
 	atom md = allocate_data( SIZEOF_HASH_STATE, TRUE )
 	if c_func( func, {md} ) != CRYPT_OK then
 		return NULL
@@ -98,13 +98,13 @@ function _init( integer func )
 	return md
 end function
 
-function _proc( integer func, atom md, sequence in, integer inlen )
+export function hash_process( integer func, atom md, sequence in, integer inlen=length(in) )
 	atom ptr = allocate_data( inlen, TRUE )
 	poke( ptr, in )
 	return c_func( func, {md,ptr,inlen} )
 end function
 
-function _done( integer func, atom md, integer outlen )
+export function hash_done( integer func, atom md, integer outlen )
 	atom ptr = allocate_data( outlen, TRUE )
 	mem_set( ptr, NULL, outlen )
 	if c_func( func, {md,ptr} ) != CRYPT_OK then
@@ -114,154 +114,155 @@ function _done( integer func, atom md, integer outlen )
 end function
 
 public function md2_init()
-	return _init( _md2_init )
+	return hash_init( _md2_init )
 end function
 
 public function md2_process( atom md, sequence in )
-	return _proc( _md2_process, md, in, length(in) )
+	return hash_process( _md2_process, md, in )
 end function
 
 public function md2_done( atom md )
-	return _done( _md2_done, md, 16 )
+	return hash_done( _md2_done, md, 16 )
 end function
 
 public function md4_init()
-	return _init( _md4_init )
+	return hash_init( _md4_init )
 end function
 
 public function md4_process( atom md, sequence in )
-	return _proc( _md4_process, md, in, length(in) )
+	return hash_process( _md4_process, md, in )
 end function
 
 public function md4_done( atom md )
-	return _done( _md4_done, md, 16 )
+	return hash_done( _md4_done, md, 16 )
 end function
 
 public function md5_init()
-	return _init( _md5_init )
+	return hash_init( _md5_init )
 end function
 
 public function md5_process( atom md, sequence in )
-	return _proc( _md5_process, md, in, length(in) )
+	return hash_process( _md5_process, md, in )
 end function
 
 public function md5_done( atom md )
-	return _done( _md5_done, md, 16 )
+	return hash_done( _md5_done, md, 16 )
 end function
 
 public function sha1_init()
-	return _init( _sha1_init )
+	return hash_init( _sha1_init )
 end function
 
 public function sha1_process( atom md, sequence in )
-	return _proc( _sha1_process, md, in, length(in) )
+	return hash_process( _sha1_process, md, in )
 end function
 
 public function sha1_done( atom md )
-	return _done( _sha1_done, md, 20 )
+	return hash_done( _sha1_done, md, 20 )
 end function
 
 public function sha224_init()
-	return _init( _sha224_init )
+	return hash_init( _sha224_init )
 end function
 
 public function sha224_process( atom md, sequence in )
-	return _proc( _sha256_process, md, in, length(in) )
+	return hash_process( _sha256_process, md, in )
 end function
 
 public function sha224_done( atom md )
-	return _done( _sha224_done, md, 28 )
+	return hash_done( _sha224_done, md, 28 )
 end function
 
 public function sha256_init()
-	return _init( _sha256_init )
+	return hash_init( _sha256_init )
 end function
 
 public function sha256_process( atom md, sequence in )
-	return _proc( _sha256_process, md, in, length(in) )
+	return hash_process( _sha256_process, md, in )
 end function
 
 public function sha256_done( atom md )
-	return _done( _sha256_done, md, 32 )
+	return hash_done( _sha256_done, md, 32 )
 end function
 
 public function sha384_init()
-	return _init( _sha384_init )
+	return hash_init( _sha384_init )
 end function
 
 public function sha384_process( atom md, sequence in )
-	return _proc( _sha512_process, md, in, length(in) )
+	return hash_process( _sha512_process, md, in )
 end function
 
 public function sha384_done( atom md )
-	return _done( _sha384_done, md, 48 )
+	return hash_done( _sha384_done, md, 48 )
 end function
 
 public function sha512_init()
-	return _init( _sha512_init )
+	return hash_init( _sha512_init )
 end function
 
 public function sha512_process( atom md, sequence in )
-	return _proc( _sha512_process, md, in, length(in) )
+	return hash_process( _sha512_process, md, in )
 end function
 
 public function sha512_done( atom md )
-	return _done( _sha512_done, md, 64 )
+	return hash_done( _sha512_done, md, 64 )
 end function
 
 public function sha512_224_init()
-	return _init( _sha512_224_init )
+	return hash_init( _sha512_224_init )
 end function
 
 public function sha512_224_process( atom md, sequence in )
-	return _proc( _sha512_process, md, in, length(in) )
+	return hash_process( _sha512_process, md, in )
 end function
 
 public function sha512_224_done( atom md )
-	return _done( _sha512_224_done, md, 28 )
+	return hash_done( _sha512_224_done, md, 28 )
 end function
 
 public function sha512_256_init()
-	return _init( _sha512_256_init )
+	return hash_init( _sha512_256_init )
 end function
 
 public function sha512_256_process( atom md, sequence in )
-	return _proc( _sha512_process, md, in, length(in) )
+	return hash_process( _sha512_process, md, in )
 end function
 
 public function sha512_256_done( atom md )
-	return _done( _sha512_256_done, md, 32 )
+	return hash_done( _sha512_256_done, md, 32 )
 end function
 
 public function sha3_224_init()
-	return _init( _sha3_224_init )
+	return hash_init( _sha3_224_init )
 end function
 
 public function sha3_256_init()
-	return _init( _sha3_256_init )
+	return hash_init( _sha3_256_init )
 end function
 
 public function sha3_384_init()
-	return _init( _sha3_384_init )
+	return hash_init( _sha3_384_init )
 end function
 
 public function sha3_512_init()
-	return _init( _sha3_512_init )
+	return hash_init( _sha3_512_init )
 end function
 
 public function sha3_process( atom md, sequence in )
-	return _proc( _sha3_process, md, in, length(in) )
+	return hash_process( _sha3_process, md, in )
 end function
 
 constant SHA3_CAPACITY_WORDS = 412
 
 public function sha3_done( atom md )
-	return _done( _sha3_done, md, peek2u(md+SHA3_CAPACITY_WORDS)*4 )
+	return hash_done( _sha3_done, md, peek2u(md+SHA3_CAPACITY_WORDS)*4 )
 end function
 
 public function find_hash( sequence name )
 	register_all_hashes()
-	return c_func( _find_hash, {allocate_string(name,TRUE)} )
+	atom pname = allocate_string( name, TRUE )
+	return c_func( _find_hash, {pname} )
 end function
 
 public function find_hash_id( integer id )
@@ -278,7 +279,8 @@ end function
 
 public function find_hash_any( sequence name, integer digestlen )
 	register_all_hashes()
-	return c_func( _find_hash_any, {allocate_string(name,TRUE),digestlen} )
+	atom pname = allocate_string( name, TRUE )
+	return c_func( _find_hash_any, {pname,digestlen} )
 end function
 
 public function register_hash( atom ptr )
@@ -331,11 +333,12 @@ public function hash_file( object idx, sequence fname )
 	end if
 
 	atom outlen = 64
+	atom pfname = allocate_string( fname, TRUE )
 	atom pout = allocate_data( outlen, TRUE )
 	atom poutlen = allocate_data( sizeof(C_ULONG), TRUE )
 	poke( poutlen, outlen )
 
-	if c_func( _hash_file, {idx,allocate_string(fname,TRUE),pout,poutlen} ) != CRYPT_OK then
+	if c_func( _hash_file, {idx,pfname,pout,poutlen} ) != CRYPT_OK then
 		return {}
 	end if
 
